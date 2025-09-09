@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Usage: ./run foo bar --flag
+./gradlew run --args="$*"
