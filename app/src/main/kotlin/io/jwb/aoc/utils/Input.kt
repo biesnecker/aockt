@@ -7,6 +7,11 @@ fun getInput(year: Int, day: Int): List<String> {
     return File(filename).readLines()
 }
 
+fun getInputAsSingleString(year: Int, day: Int): String {
+    val filename = "input/$year/${day.toString().padStart(2, '0')}.txt"
+    return File(filename).readText().trim()
+}
+
 fun getInputAsDelimitedListOfInts(
         year: Int,
         day: Int,
