@@ -2,7 +2,16 @@ package io.jwb.aoc.utils
 
 import kotlin.math.abs
 
-data class Coord(val x: Int, val y: Int) {
+data class Coord(val x: Int, val y: Int): Comparable<Coord> {
+
+    override fun compareTo(other: Coord): Int {
+        // Primary comparison by x, then by y
+        return compareValuesBy(this, other, Coord::x, Coord::y)
+    }
+
+    operator fun plus(other: Coord): Coord = Coord(x + other.x, y + other.y)
+
+    operator fun minus(other: Coord): Coord = Coord(x - other.x, y - other.y)
 
     fun move(dx: Int, dy: Int) = Coord(x + dx, y + dy)
 
