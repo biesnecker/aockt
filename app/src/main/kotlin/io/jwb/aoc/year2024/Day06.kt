@@ -10,35 +10,44 @@ class Day06(input: List<String>) {
         row.trim().mapIndexed { x, c ->
             Pair(Coord(x, y), c == '.' || c == '^')
         }
-    }.toMap()
+    }.toMap().toMutableMap()
 
     val startPos = input.flatMapIndexed { y, row ->
         row.trim().mapIndexed { x, c -> if (c == '^') Coord(x, y) else null }
     }.filterNotNull().first()
 
-    fun traverse(): Int {
-        val seen = mutableSetOf<Coord>()
+    fun traverse(g: Map<Coord, Boolean>): Pair<Set<Coord>, Boolean> {
+        val seen = mutableSetOf<Pair<Coord, Direction>>()
         var loc = startPos
         var dir = Direction.NORTH
 
-        while (grid[loc] != null) {
-            seen += loc
+        while (g[loc] != null && (loc to dir) !in seen) {
+            seen += loc to dir
             val nextLoc = loc.moveInDirection(dir)
-            if (grid[nextLoc] == false) {
+            if (g[nextLoc] == false) {
                 dir = dir.turnRight()
             } else {
                 loc = nextLoc
             }
         }
-        return seen.size
+        return seen.map { it.first }.toSet() to (g[loc] != null)
     }
 
-    fun partOne(): Int = traverse()
+    fun partOne(): Int = traverse(grid).first.size
+
+    fun partTwo(): Int =
+        traverse(grid)
+            .first
+            .filterNot { it == startPos }
+            .count { candidate ->
+                traverse(grid.apply { put(candidate, false) }).also { grid[candidate] = true }.second
+            }
 
 }
 
 
 fun main() {
-    val solution = Day06(getInput(2024,6))
+    val solution = Day06(getInput(2024, 6))
     println("Part 1: ${solution.partOne()}")
+    println("Part 2: ${solution.partTwo()}")
 }
