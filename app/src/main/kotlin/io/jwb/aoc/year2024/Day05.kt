@@ -1,49 +1,35 @@
 package io.jwb.aoc.year2024
 
 import io.jwb.aoc.utils.getInput
-import kotlin.text.Regex
+import io.jwb.aoc.utils.midpoint
 
-fun partOne(reqs: Map<Int, Set<Int>>, orders: List<List<Int>>): Int {
-    var res = 0
-    for (o in orders) {
-        val seen = mutableSetOf<Int>()
-        val all = o.toSet()
-        var good = true
-        for (item in o) {
-            val needed = reqs.getOrDefault(item, setOf())
-            val expected = needed.intersect(all)
-            if (!seen.containsAll(expected)) {
-                good = false
-                break
+class Day05(input: List<String>) {
+
+    private val rules: Set<String> = input.takeWhile { it.isNotEmpty() }.toSet()
+    private val updates: List<List<String>> = input.dropWhile { it.isNotEmpty() }.drop(1).map { it.split(",") }
+
+    private val mappings: List<Pair<List<String>, List<String>>> = updates.map {
+        it to it.sortedWith { a, b ->
+            when {
+                "$a|$b" in rules -> -1
+                "$b|$a" in rules -> 1
+                else -> 0
             }
-            seen.add(item)
-        }
-        if (good) {
-            val middleIdx = o.size / 2
-            res += o[middleIdx]
         }
     }
-    return res
+
+    fun partOne(): Int {
+        return mappings.filter { it.first == it.second }.sumOf { it.second.midpoint().toInt() }
+    }
+
+    fun partTwo(): Int {
+        return mappings.filter { it.first != it.second }.sumOf { it.second.midpoint().toInt() }
+    }
 }
 
 fun main() {
     val input = getInput(2024, 5)
-    val sepIdx = input.indexOfFirst { it.isEmpty() }
-    val r = Regex("""(\d+)\|(\d+)""")
-    val reqs = mutableMapOf<Int, MutableSet<Int>>()
-    for (i in 0 until sepIdx) {
-        val mr = r.find(input[i].trim())!!
-        val (left, right) = mr.destructured
-        val leftAsInt = left.toInt()
-        val rightAsInt = right.toInt()
-        reqs.getOrPut(rightAsInt) { mutableSetOf() }.add(leftAsInt)
-    }
-
-    val orders = mutableListOf<List<Int>>()
-    for (i in sepIdx + 1 until input.size) {
-        val o = input[i].trim().split(",").map { it.toInt() }
-        orders.add(o)
-    }
-
-    println("Part 1: ${partOne(reqs, orders)}")
+    val solution = Day05(input)
+    println("Part 1: ${solution.partOne()}")
+    println("Part 2: ${solution.partTwo()}")
 }
