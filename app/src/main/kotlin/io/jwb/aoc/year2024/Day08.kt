@@ -2,9 +2,7 @@ package io.jwb.aoc.year2024
 
 import io.jwb.aoc.utils.Coord
 import io.jwb.aoc.utils.getInput
-import io.jwb.aoc.utils.minMax
 import io.jwb.aoc.utils.pairwise
-import kotlin.math.sign
 
 class Day08(input: List<String>) {
 
