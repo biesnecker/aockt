@@ -5,7 +5,6 @@ import io.jwb.aoc.utils.getInputAsSingleString
 
 class Day09(input: String) {
     val disk = input
-        .trim()
         .windowed(2, 2, true)
         .withIndex()
         .flatMap { (index, value) -> List(value.first().digitToInt()) { index.toLong() } +
