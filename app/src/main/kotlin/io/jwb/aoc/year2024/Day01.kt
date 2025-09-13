@@ -4,8 +4,8 @@ import io.jwb.aoc.utils.getInput
 import kotlin.math.abs
 
 fun solveDay01(input: List<String>): Pair<Int, Int> {
-    var left = mutableListOf<Int>()
-    var right = mutableListOf<Int>()
+    val left = mutableListOf<Int>()
+    val right = mutableListOf<Int>()
 
     for (line in input) {
         val (l, r) = line.trim().split("\\s+".toRegex())

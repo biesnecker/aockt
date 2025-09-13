@@ -1,14 +1,15 @@
 package io.jwb.aoc.year2024
 
 import io.jwb.aoc.utils.getInputAsDelimitedListOfInts
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.sign
 
 fun check(nums: List<Int>): Boolean {
     val dir = (nums[1] - nums[0]).sign
     if (dir == 0) return false
     for (i in 1 until nums.size) {
         val diff = nums[i] - nums[i - 1]
-        if (abs(diff) < 1 || abs(diff) > 3 || diff.sign != dir) {
+        if (abs(diff) !in 1..3 || diff.sign != dir) {
             return false
         }
     }
