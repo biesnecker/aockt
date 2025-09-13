@@ -44,16 +44,20 @@ fun checkMas(grid: Grid, loc: Coord): Boolean {
 }
 
 suspend fun partOne(grid: Grid, sem: Semaphore): Int = coroutineScope {
-    val jobs = grid.filter { it.value == 'X'}.map { async {
-        sem.withPermit { checkAllDirections(grid, it.key)} }
+    val jobs = grid.filter { it.value == 'X' }.map {
+        async {
+            sem.withPermit { checkAllDirections(grid, it.key) }
+        }
     }
     jobs.awaitAll().sum()
 }
 
 suspend fun partTwo(grid: Grid, sem: Semaphore): Int = coroutineScope {
-    val jobs = grid.filter { it.value == 'A' }.map { async {
-        sem.withPermit { checkMas(grid, it.key ) }
-    }}
+    val jobs = grid.filter { it.value == 'A' }.map {
+        async {
+            sem.withPermit { checkMas(grid, it.key) }
+        }
+    }
     jobs.awaitAll().count { it }
 }
 
