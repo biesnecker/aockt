@@ -2,7 +2,7 @@ package io.jwb.aoc.utils
 
 import kotlin.math.abs
 
-data class Coord(val x: Int, val y: Int): Comparable<Coord> {
+data class Coord(val x: Int, val y: Int) : Comparable<Coord> {
 
     override fun compareTo(other: Coord): Int {
         // Primary comparison by x, then by y
@@ -28,18 +28,26 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
         }
     }
 
+    fun moveInDirections(vararg directions: Direction): Coord {
+        var loc = this
+        directions.forEach {
+            loc = loc.moveInDirection(it)
+        }
+        return loc
+    }
+
     val allNeighbors: List<Coord>
         get() =
-                listOf(
-                        move(-1, -1),
-                        move(0, -1),
-                        move(1, -1),
-                        move(-1, 0),
-                        move(1, 0),
-                        move(-1, 1),
-                        move(0, 1),
-                        move(1, 1)
-                )
+            listOf(
+                move(-1, -1),
+                move(0, -1),
+                move(1, -1),
+                move(-1, 0),
+                move(1, 0),
+                move(-1, 1),
+                move(0, 1),
+                move(1, 1)
+            )
 
     val cardinalNeighbors: List<Coord>
         get() = listOf(move(0, -1), move(-1, 0), move(1, 0), move(0, 1))
