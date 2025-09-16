@@ -13,6 +13,10 @@ data class Coord(val x: Int, val y: Int) : Comparable<Coord> {
 
     operator fun minus(other: Coord): Coord = Coord(x - other.x, y - other.y)
 
+    operator fun div(by: Int): Coord = Coord(x / by, y / by)
+
+    operator fun times(by: Int): Coord = Coord(x * by, y * by)
+
     fun move(dx: Int, dy: Int) = Coord(x + dx, y + dy)
 
     fun moveInDirection(direction: Direction, distance: Int = 1): Coord {
