@@ -11,6 +11,8 @@ data class Coord(val x: Int, val y: Int) : Comparable<Coord> {
 
     operator fun plus(other: Coord): Coord = Coord(x + other.x, y + other.y)
 
+    operator fun plus(dir: Direction): Coord = moveInDirection(dir)
+
     operator fun minus(other: Coord): Coord = Coord(x - other.x, y - other.y)
 
     operator fun div(by: Int): Coord = Coord(x / by, y / by)
