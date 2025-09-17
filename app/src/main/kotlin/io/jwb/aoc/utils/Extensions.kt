@@ -66,6 +66,8 @@ operator fun List<CharArray>.set(loc: Coord, item: Char) {
 
 fun List<CharArray>.findFirst(item: Char): Coord = this.findAll(item).first()
 
+fun List<CharArray>.inBounds(pos: Coord): Boolean = pos.inBounds(this[0].size, this.size)
+
 
 fun List<CharArray>.findAll(item: Char): Sequence<Coord> = sequence {
     this@findAll.forEachIndexed { y, row ->
