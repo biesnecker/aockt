@@ -9,6 +9,9 @@ data class Coord(val x: Int, val y: Int) : Comparable<Coord> {
         return compareValuesBy(this, other, Coord::x, Coord::y)
     }
 
+    // Manhattan distance between two coordinates
+    fun distanceTo(other: Coord): Int = abs(x - other.x) + abs(y - other.y)
+
     operator fun plus(other: Coord): Coord = Coord(x + other.x, y + other.y)
 
     operator fun plus(dir: Direction): Coord = moveInDirection(dir)

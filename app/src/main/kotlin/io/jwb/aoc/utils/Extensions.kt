@@ -64,20 +64,41 @@ operator fun List<CharArray>.set(loc: Coord, item: Char) {
     this[loc.y][loc.x] = item
 }
 
-fun List<CharArray>.findFirst(item: Char): Coord = this.findAll(item).first()
-
 fun List<CharArray>.inBounds(pos: Coord): Boolean = pos.inBounds(this[0].size, this.size)
 
+@JvmName("findFirstListCharArray")
+fun List<CharArray>.findFirst(item: Char): Coord = this.findAll(item).first()
 
-fun List<CharArray>.findAll(item: Char): Sequence<Coord> = sequence {
+@JvmName("findFirstListString")
+fun List<String>.findFirst(item: Char): Coord = this.findAll(item).first()
+
+@JvmName("findAllListString")
+fun List<String>.findAll(item: Char): Sequence<Coord> = this.findAll { it == item }
+
+@JvmName("findAllListString")
+fun List<String>.findAll(predicate: (Char) -> Boolean): Sequence<Coord> = sequence {
     this@findAll.forEachIndexed { y, row ->
         row.forEachIndexed { x, c ->
-            if (c == item) {
+            if (predicate(c)) {
                 yield(Coord(x, y))
             }
         }
     }
 }
+
+@JvmName("findAllListCharArray")
+fun List<CharArray>.findAll(predicate: (Char) -> Boolean): Sequence<Coord> = sequence {
+    this@findAll.forEachIndexed { y, row ->
+        row.forEachIndexed { x, c ->
+            if (predicate(c)) {
+                yield(Coord(x, y))
+            }
+        }
+    }
+}
+
+@JvmName("findAllListCharArray")
+fun List<CharArray>.findAll(item: Char): Sequence<Coord> = this.findAll { it == item }
 
 fun <T : Comparable<T>> Pair<T, T>.minMax(): Pair<T, T> =
     if (first <= second) this else second to first
