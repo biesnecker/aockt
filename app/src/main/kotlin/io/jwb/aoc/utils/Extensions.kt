@@ -20,6 +20,22 @@ fun List<String>.chunkByEmptyString(): Sequence<List<String>> = sequence {
     }
 }
 
+fun List<String>.toCharArrayGrid(): List<CharArray> = map { it.toCharArray() }
+
+@JvmName("debugPrintListString")
+fun List<String>.debugPrint() = this.forEach { println(it) }
+
+@JvmName("debugPrintListCharArray")
+fun List<CharArray>.debugPrint() = this.forEach { print(it.toString()) }
+
+fun List<CharArray>.toStringGrid(): List<String> = map { it.joinToString("") }
+
+fun List<String>.forEachCoord(f: (Coord, Char) -> Unit) {
+    this.forEachIndexed { y, row ->
+        row.forEachIndexed { x, c -> f(Coord(x, y), c) }
+    }
+}
+
 fun <T> List<String>.buildGrid(f: (Int, Int, Char) -> T): Sequence<Pair<Coord, T>> = sequence {
     this@buildGrid.flatMapIndexed { y, row ->
         row.trim().mapIndexed { x, c ->
@@ -58,6 +74,12 @@ fun <T> List<String>.buildGridNotNull(f: (Char) -> T?): Sequence<Pair<Coord, T>>
     }
 }
 
+fun List<String>.getOrNull(loc: Coord): Char? = this.getOrNull(loc.y)?.getOrNull(loc.x)
+
+@JvmName("getListString")
+operator fun List<String>.get(loc: Coord): Char = this[loc.y][loc.x]
+
+@JvmName("getListCharArray")
 operator fun List<CharArray>.get(loc: Coord): Char = this[loc.y][loc.x]
 
 operator fun List<CharArray>.set(loc: Coord, item: Char) {
@@ -69,36 +91,42 @@ fun List<CharArray>.inBounds(pos: Coord): Boolean = pos.inBounds(this[0].size, t
 @JvmName("findFirstListCharArray")
 fun List<CharArray>.findFirst(item: Char): Coord = this.findAll(item).first()
 
+@JvmName("findFirstListCharArray")
+fun List<CharArray>.findFirst(predicate: (Char) -> Boolean): Pair<Coord, Char> = this.findAll(predicate).first()
+
 @JvmName("findFirstListString")
 fun List<String>.findFirst(item: Char): Coord = this.findAll(item).first()
 
-@JvmName("findAllListString")
-fun List<String>.findAll(item: Char): Sequence<Coord> = this.findAll { it == item }
+@JvmName("findFirstListString")
+fun List<String>.findFirst(predicate: (Char) -> Boolean): Pair<Coord, Char> = this.findAll(predicate).first()
 
 @JvmName("findAllListString")
-fun List<String>.findAll(predicate: (Char) -> Boolean): Sequence<Coord> = sequence {
+fun List<String>.findAll(item: Char): Sequence<Coord> = this.findAll { it == item }.map { it.first }
+
+@JvmName("findAllListString")
+fun List<String>.findAll(predicate: (Char) -> Boolean): Sequence<Pair<Coord, Char>> = sequence {
     this@findAll.forEachIndexed { y, row ->
         row.forEachIndexed { x, c ->
             if (predicate(c)) {
-                yield(Coord(x, y))
+                yield(Pair(Coord(x, y), c))
             }
         }
     }
 }
 
 @JvmName("findAllListCharArray")
-fun List<CharArray>.findAll(predicate: (Char) -> Boolean): Sequence<Coord> = sequence {
+fun List<CharArray>.findAll(predicate: (Char) -> Boolean): Sequence<Pair<Coord, Char>> = sequence {
     this@findAll.forEachIndexed { y, row ->
         row.forEachIndexed { x, c ->
             if (predicate(c)) {
-                yield(Coord(x, y))
+                yield(Pair(Coord(x, y), c))
             }
         }
     }
 }
 
 @JvmName("findAllListCharArray")
-fun List<CharArray>.findAll(item: Char): Sequence<Coord> = this.findAll { it == item }
+fun List<CharArray>.findAll(item: Char): Sequence<Coord> = this.findAll { it == item }.map { it.first }
 
 fun <T : Comparable<T>> Pair<T, T>.minMax(): Pair<T, T> =
     if (first <= second) this else second to first

@@ -46,47 +46,37 @@ data class Coord(val x: Int, val y: Int) : Comparable<Coord> {
     }
 
     val allNeighbors: List<Coord>
-        get() =
-            listOf(
-                move(-1, -1),
-                move(0, -1),
-                move(1, -1),
-                move(-1, 0),
-                move(1, 0),
-                move(-1, 1),
-                move(0, 1),
-                move(1, 1)
-            )
+        get() = Direction.entries.map { this + it }
 
     val cardinalNeighbors: List<Coord>
-        get() = listOf(move(0, -1), move(-1, 0), move(1, 0), move(0, 1))
+        get() = listOf(north, south, east, west)
 
     val diagonalNeighbors: List<Coord>
-        get() = listOf(move(-1, -1), move(1, -1), move(-1, 1), move(1, 1))
+        get() = listOf(northeast, southeast, southwest, northwest)
 
     val north: Coord
-        get() = moveInDirection(Direction.NORTH)
+        get() = this + Direction.NORTH
 
     val south: Coord
-        get() = moveInDirection(Direction.SOUTH)
+        get() = this + Direction.SOUTH
 
     val west: Coord
-        get() = moveInDirection(Direction.WEST)
+        get() = this + Direction.WEST
 
     val east: Coord
-        get() = moveInDirection(Direction.EAST)
+        get() = this + Direction.EAST
 
     val northeast: Coord
-        get() = moveInDirection(Direction.NORTHEAST)
+        get() = this + Direction.NORTHEAST
 
     val southeast: Coord
-        get() = moveInDirection(Direction.SOUTHEAST)
+        get() = this + Direction.SOUTHEAST
 
     val southwest: Coord
-        get() = moveInDirection(Direction.SOUTHWEST)
+        get() = this + Direction.SOUTHWEST
 
     val northwest: Coord
-        get() = moveInDirection(Direction.NORTHWEST)
+        get() = this + Direction.NORTHWEST
 
     fun manhattanDistance(other: Coord): Int {
         return abs(x - other.x) + abs(y - other.y)

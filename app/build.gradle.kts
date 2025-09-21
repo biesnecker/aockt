@@ -51,3 +51,19 @@ application {
 tasks.named<JavaExec>("run") {
     workingDir = project.rootDir
 }
+
+tasks.test {
+    testLogging {
+        // Print for every test, not just failures
+        events("passed", "skipped", "failed")
+
+        // Make output more readable
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+
+        // Optional: use FULL to include full exception text instead of truncated
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
+
