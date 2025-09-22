@@ -1,6 +1,7 @@
 package io.jwb.aoc.year2019
 
 import io.jwb.aoc.utils.getInput
+import java.math.BigInteger
 import kotlin.math.absoluteValue
 
 class Day22(input: List<String>) {
@@ -60,7 +61,41 @@ class Day22(input: List<String>) {
         return cards.indexOf(2019)
     }
 
-    fun partTwo(): Int = 0
+    fun partTwo(): BigInteger {
+        val NUMBER_OF_CARDS = 119315717514047.toBigInteger()
+        val SHUFFLES = 101741582076661.toBigInteger()
+        val TWO = 2.toBigInteger()
+        val FIND = 2020.toBigInteger()
+
+        val memory = arrayOf(BigInteger.ONE, BigInteger.ZERO)
+        commands.asReversed().forEach { cmd ->
+            when (cmd) {
+                is Command.DealNewStack -> {
+                    memory[0] = memory[0].negate()
+                    memory[1] = (memory[1].inc()).negate()
+                }
+
+                is Command.Cut -> {
+                    memory[1] += cmd.by.toBigInteger()
+                }
+
+                is Command.DealWithIncrement -> {
+                    cmd.increment.toBigInteger().modPow(NUMBER_OF_CARDS - TWO, NUMBER_OF_CARDS).also {
+                        memory[0] *= it
+                        memory[1] *= it
+                    }
+                }
+            }
+            memory[0] %= NUMBER_OF_CARDS
+            memory[1] %= NUMBER_OF_CARDS
+        }
+
+        val power = memory[0].modPow(SHUFFLES, NUMBER_OF_CARDS)
+        return ((power * FIND) +
+                ((memory[1] * (power + NUMBER_OF_CARDS.dec())) *
+                        ((memory[0].dec()).modPow(NUMBER_OF_CARDS - TWO, NUMBER_OF_CARDS))))
+            .mod(NUMBER_OF_CARDS)
+    }
 }
 
 fun main() {
